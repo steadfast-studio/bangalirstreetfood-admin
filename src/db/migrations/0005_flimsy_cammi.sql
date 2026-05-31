@@ -1,0 +1,1 @@
+ALTER TABLE "bookings" ADD COLUMN "secret_token" varchar(64) DEFAULT 'abc' NOT NULL;
