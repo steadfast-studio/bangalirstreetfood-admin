@@ -6,10 +6,12 @@ import { Mountain, PieChart } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { SidebarItems } from "./sidebar-items";
+import LogoutButton from "../logout";
 
 // This is sample data.
 const data = {
@@ -34,7 +36,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <SidebarItems groupLabel="Travel" items={data.travel} />
       </SidebarContent>
-
+      <SidebarFooter>
+        <LogoutButton />
+      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );

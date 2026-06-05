@@ -25,20 +25,15 @@ import {
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import SubmitButton from "@/components/submit-button";
 import { useRouter } from "next/navigation";
+import { adminLogin } from "@/actions/auth.action";
 
 const formSchema = z.object({
   email: z.email("Enter a valid email address."),
-  password: z.string().min(6, "Password must be at least 6 characters."),
+  password: z.string().min(8, "Password must be at least 8 characters."),
 });
 
 export default function LoginForm() {
   const router = useRouter();
-
-  // const [isLoggedIn, setIsLoggedIn] = React.useState(true); // Replace with actual authentication logic
-
-  // if (isLoggedIn) {
-  //   router.push("/dashboard");
-  // }
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,7 +45,7 @@ export default function LoginForm() {
 
   const [showPassword, setShowPassword] = React.useState(false);
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
+  async function onSubmit(data: z.infer<typeof formSchema>) {
     const parsed = formSchema.safeParse(data);
 
     if (!parsed.success) {
@@ -58,26 +53,27 @@ export default function LoginForm() {
       return;
     }
     // TODO: Implement actual login logic here
+    await adminLogin(data.email, data.password)
+      .then(() => {
+        form.reset();
+        // Redirect to dashboard or home page after successful login
+        router.push("/dashboard");
+      })
+      .catch(() => {
+        toast.error("Login Error:", {
+          description: "Invalid email or password. Please try again.",
+        });
+      });
     // delay is just to simulate an async operation
-    setTimeout(() => {
-      toast.success("Login successful!");
-    }, 1000);
-    toast.success("Login Submitted:", {
-      description: (
-        <pre className="bg-code text-code-foreground mt-2 w-[320px] overflow-x-auto rounded-md p-4">
-          <code>{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-      position: "bottom-right",
-    });
-    form.reset();
   }
 
   return (
-    <div className="flex items-center justify-center bg-gray-100 p-12">
+    <div className="flex items-center justify-center bg-gray-100 h-svh p-12">
       <Card className="m-12 w-full max-w-md">
         <CardHeader>
-          <CardTitle>Login</CardTitle>
+          <CardTitle>
+            <h1 className="font-semibold text-center">Login</h1>
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <form id="login-form" onSubmit={form.handleSubmit(onSubmit)}>
