@@ -1,9 +1,12 @@
-import Image from "next/image";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-// If logged in redirect to dashboard
+export default async function Home() {
+  const session = await auth.api.getSession();
 
-export default function Home() {
-  // if logged in redirect to dashboard
-  // else show login page
-  return <></>;
+  if (!session) {
+    redirect("/sign-in");
+  } else {
+    redirect("/dashboard");
+  }
 }
