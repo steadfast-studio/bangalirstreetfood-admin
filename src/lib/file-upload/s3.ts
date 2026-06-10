@@ -11,7 +11,7 @@ const s3ClientConfig: {
     secretAccessKey: string;
   };
 } = {
-  region: process.env.AWS_REGION,
+  region: process.env.AWS_REGION_ID,
 };
 
 if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_KEY_ID) {
