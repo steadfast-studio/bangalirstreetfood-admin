@@ -6,6 +6,7 @@ import {
   itineraryTable,
   packagesTable,
   travelDatesTable,
+  bookingsTable,
 } from "@/db/schema";
 import { revalidatePath } from "next/cache";
 import { randomUUID } from "crypto";
@@ -528,17 +529,50 @@ export const updatePackage = async (
         })),
       );
 
-      // Delete old travel dates and insert new
-      await tx
-        .delete(travelDatesTable)
-        .where(eq(travelDatesTable.packageId, packageId));
+      // Handle travel dates carefully to avoid FK constraint violations
+      // Get existing travel dates with their booking status
+      const existingDates = await tx
+        .select({
+          id: travelDatesTable.id,
+          startDate: travelDatesTable.startDate,
+          hasBookings: countDistinct(bookingsTable.id),
+        })
+        .from(travelDatesTable)
+        .leftJoin(
+          bookingsTable,
+          eq(travelDatesTable.id, bookingsTable.travelDateId),
+        )
+        .where(eq(travelDatesTable.packageId, packageId))
+        .groupBy(travelDatesTable.id, travelDatesTable.startDate);
 
-      await tx.insert(travelDatesTable).values(
-        journeyDates.map((date) => ({
-          packageId,
-          startDate: date.toISOString().split("T")[0],
-        })),
+      // Convert new journey dates to YYYY-MM-DD format for comparison
+      const newDateStrings = journeyDates.map(
+        (date) => date.toISOString().split("T")[0],
       );
+
+      // Delete only the dates that don't have bookings and are not in the new list
+      const datesToDelete = existingDates
+        .filter((d) => !newDateStrings.includes(d.startDate) && d.hasBookings === 0)
+        .map((d) => d.id);
+
+      if (datesToDelete.length > 0) {
+        await tx
+          .delete(travelDatesTable)
+          .where(inArray(travelDatesTable.id, datesToDelete));
+      }
+
+      // Insert new dates that don't already exist
+      const existingDateStrings = existingDates.map((d) => d.startDate);
+      const datesToInsert = newDateStrings
+        .filter((date) => !existingDateStrings.includes(date))
+        .map((date) => ({
+          packageId,
+          startDate: date,
+        }));
+
+      if (datesToInsert.length > 0) {
+        await tx.insert(travelDatesTable).values(datesToInsert);
+      }
     });
 
     // Clean up old images that are no longer used
