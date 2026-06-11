@@ -179,6 +179,12 @@
   --sidebar-ring: oklch(0.556 0 0);
 } */
 
+@layer base {
+  label {
+    @apply font-medium text-gray-900;
+  }
+}
+
 @utility glassmorphic {
   @apply rounded-lg border border-white/20 bg-white/30 backdrop-blur-md;
 }

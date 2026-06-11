@@ -7,10 +7,13 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  TableCaption,
 } from "@/components/ui/table";
 import { Baby, Mail, MessageSquare, PhoneCall, UserRound } from "lucide-react";
 import BookingFilters from "../../_components/BookingFilter";
-import { getBookingDetailsById, getTravelDates } from "@/app/_actions/bookings";
+import { cleanupBookings, getBookingDetailsById, getTravelDates } from "@/app/_actions/bookings";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 const BookingsPage = async ({
   searchParams,
@@ -25,6 +28,19 @@ const BookingsPage = async ({
     ? await getBookingDetailsById(params.dateId)
     : [];
 
+  const handleCleanup = async () => {
+    if(!params?.packageId || !params?.dateId) {
+      toast.error("Please select a package and date to clean up bookings");
+      return;
+    };
+    await cleanupBookings(params.packageId, params.dateId).then(()=>{
+      toast.success("Pending bookings removed successfully");
+    }).catch(()=>{
+      toast.error("Failed to remove pending bookings");
+    });
+  }
+
+
   return (
     <div className="space-y-6">
       <PageTitle title="Bookings" />
@@ -36,6 +52,14 @@ const BookingsPage = async ({
       {/* BOOKINGS TABLE */}
       {bookingData.length > 0 ? (
         <Table>
+          <TableCaption>
+            <div className="flex justify-between mb-2 items-center px-4">
+              <h2>Booking Details</h2>
+              <Button variant={"destructive"} 
+              // onClick={handleCleanup}
+              >Remove Pending Bookings</Button>
+            </div>
+          </TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead>Customer Name</TableHead>

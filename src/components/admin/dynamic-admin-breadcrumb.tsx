@@ -58,7 +58,7 @@ export function DynamicAdminBreadcrumb() {
         <BreadcrumbItem className={items.length > 0 ? "hidden md:block" : ""}>
           {items.length > 0 ? (
             <BreadcrumbLink asChild>
-              <Link href="/admin">Admin</Link>
+              <Link href="/dashboard">Admin</Link>
             </BreadcrumbLink>
           ) : (
             <BreadcrumbPage>Admin</BreadcrumbPage>

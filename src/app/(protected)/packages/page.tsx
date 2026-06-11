@@ -5,7 +5,6 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableFooter,
   TableRow,
   TableHead,
   TableHeader,
@@ -28,7 +27,7 @@ const PackagesPage = async () => {
         <TableHeader>
           <TableRow>
             <TableHead>Title</TableHead>
-            <TableHead>Cost</TableHead>
+            <TableHead className="min-w-none max-w-30">Cost</TableHead>
             <TableHead>Available Dates</TableHead>
             <TableHead>
               Actions
@@ -45,7 +44,7 @@ const PackagesPage = async () => {
                 <span>Child: ₹{pkg.amountPerChild}</span>
               </TableCell>
               <TableCell>
-                <div className="grid w-fit grid-cols-2 flex-wrap gap-1 gap-2">
+                <div className="flex flex-col w-fit justify-center items-center gap-2">
                   {pkg.availableDates?.map((date, index) => (
                     <Badge
                       // variant based on date, if date is in past show red, if date is within next 7 days show yellow, else show green

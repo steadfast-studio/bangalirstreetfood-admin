@@ -90,3 +90,9 @@ export const getBookingDetailsById = async (travelDateId: string) => {
 
   return query;
 };
+
+export const cleanupBookings = async(packageId: string, dateId: string) =>{
+  console.log("Cleaning up....");
+  
+
+}
