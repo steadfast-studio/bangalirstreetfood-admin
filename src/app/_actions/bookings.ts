@@ -1,6 +1,7 @@
+"use server";
 import db from "@/db";
 import { bookingsTable, packagesTable, travelDatesTable } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 export const getTravelDates = async () => {
   const query = db
@@ -91,8 +92,11 @@ export const getBookingDetailsById = async (travelDateId: string) => {
   return query;
 };
 
-export const cleanupBookings = async(packageId: string, dateId: string) =>{
+export const cleanupBookings = async (packageId: string, dateId: string) => {
   console.log("Cleaning up....");
-  
-
-}
+  await db
+    .delete(bookingsTable)
+    .where(and(eq(bookingsTable.travelDateId, dateId), eq(bookingsTable.status, "PENDING"))).catch(() => {
+      throw new Error("Failed to cleanup bookings");
+    });
+};

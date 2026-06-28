@@ -9,11 +9,14 @@ import {
   TableRow,
   TableCaption,
 } from "@/components/ui/table";
-import { Baby, Mail, MessageSquare, PhoneCall, UserRound } from "lucide-react";
+import { Baby, PhoneCall, UserRound } from "lucide-react";
 import BookingFilters from "../../_components/BookingFilter";
-import { cleanupBookings, getBookingDetailsById, getTravelDates } from "@/app/_actions/bookings";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import {
+  getBookingDetailsById,
+  getTravelDates,
+} from "@/app/_actions/bookings";
+import RemovePendingBookings from "@/app/_components/RemovePendingBookings";
+import { BookingDetailsModal } from "@/app/_components/BookingDetailsModal";
 
 const BookingsPage = async ({
   searchParams,
@@ -28,18 +31,7 @@ const BookingsPage = async ({
     ? await getBookingDetailsById(params.dateId)
     : [];
 
-  const handleCleanup = async () => {
-    if(!params?.packageId || !params?.dateId) {
-      toast.error("Please select a package and date to clean up bookings");
-      return;
-    };
-    await cleanupBookings(params.packageId, params.dateId).then(()=>{
-      toast.success("Pending bookings removed successfully");
-    }).catch(()=>{
-      toast.error("Failed to remove pending bookings");
-    });
-  }
-
+  
 
   return (
     <div className="space-y-6">
@@ -51,25 +43,34 @@ const BookingsPage = async ({
       />
       {/* BOOKINGS TABLE */}
       {bookingData.length > 0 ? (
-        <Table>
+        <Table className="overflow-x-auto max-w-full">
           <TableCaption>
             <div className="flex justify-between mb-2 items-center px-4">
-              <h2>Booking Details</h2>
-              <Button variant={"destructive"} 
-              // onClick={handleCleanup}
-              >Remove Pending Bookings</Button>
+              <h2 className="font-semibold text-lg">Booking Details</h2>
+              {params?.packageId && params?.dateId && (
+                <RemovePendingBookings
+                  packageId={params?.packageId}
+                  dateId={params?.dateId}
+                  // If it contains any PENDING bookings, then enable the button, else disable it
+                  disabled={!bookingData.some(
+                    (booking) =>
+                      booking.bookingDetails.status.toLowerCase() ===
+                      "pending"
+                  )}
+                />
+              )}
             </div>
           </TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead>Customer Name</TableHead>
-              <TableHead>Customer Contact</TableHead>
+              <TableHead>Phone</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Guests</TableHead>
-              <TableHead>Additional Request</TableHead>
+              {/* <TableHead>Additional Request</TableHead> */}
               <TableHead>Payment Status</TableHead>
-              <TableHead>Amount</TableHead>
-              <TableHead>Payment ID</TableHead>
+              <TableHead>Amount Paid</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
 
@@ -85,24 +86,9 @@ const BookingsPage = async ({
                 <TableCell>
                   <div className="space-y-1">
                     <ContactItem
-                      icon={<Mail size={16} />}
-                      color="text-red-600 bg-red-50"
-                      data={booking.customerDetails.email}
-                    />
-
-                    <ContactItem
                       icon={<PhoneCall size={16} />}
                       color="text-blue-600 bg-blue-50"
                       data={booking.customerDetails.phone}
-                    />
-
-                    <ContactItem
-                      icon={<MessageSquare size={16} />}
-                      color="text-green-600 bg-green-50"
-                      data={
-                        booking.customerDetails.whatsapp ||
-                        booking.customerDetails.phone
-                      }
                     />
                   </div>
                 </TableCell>
@@ -141,22 +127,18 @@ const BookingsPage = async ({
                   </div>
                 </TableCell>
 
-                <TableCell>
+                {/* <TableCell>
                   {booking.bookingDetails.additionalRequest}
-                </TableCell>
+                </TableCell> */}
 
                 <TableCell>{booking.paymentDetails.paymentStatus}</TableCell>
 
                 <TableCell>
-                  Paid: {booking.paymentDetails.amountPaid}
-                  <br />
-                  Total: {booking.paymentDetails.totalPayable}
+                  {booking.paymentDetails.amountPaid}
                 </TableCell>
 
                 <TableCell>
-                  <span className="bg-muted rounded px-1 font-mono text-xs">
-                    {booking.paymentDetails.paymentId}
-                  </span>
+                    <BookingDetailsModal data={booking} />
                 </TableCell>
               </TableRow>
             ))}

@@ -44,7 +44,7 @@ const PackagesPage = async () => {
                 <span>Child: ₹{pkg.amountPerChild}</span>
               </TableCell>
               <TableCell>
-                <div className="flex flex-col w-fit justify-center items-center gap-2">
+                <div className="flex flex-col justify-center items-center gap-2">
                   {pkg.availableDates?.map((date, index) => (
                     <Badge
                       // variant based on date, if date is in past show red, if date is within next 7 days show yellow, else show green
@@ -69,19 +69,19 @@ const PackagesPage = async () => {
               </TableCell>
               <TableCell>
                 <div className="flex w-fit flex-col items-start gap-0.5">
-                  <Button variant="link">
+                  {/* <Button variant="link">
                     <Calendar className="h-4 w-4" />
                     Add Date
-                  </Button>
+                  </Button> */}
                   <Button variant="link" asChild>
                     <Link href={`/packages/edit/${pkg.id}`}>
                       <Edit className="h-4 w-4" />
                       Edit
                     </Link>
                   </Button>
-                  <Button variant="link" className="text-destructive">
+                  {/* <Button variant="link" className="text-destructive">
                     Unpublish
-                  </Button>
+                  </Button> */}
                 </div>
               </TableCell>
             </TableRow>
