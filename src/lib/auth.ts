@@ -3,10 +3,16 @@ import { betterAuth } from "better-auth";
 import { v4 as uuidv4 } from "uuid";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
+import { admin } from "better-auth/plugins"
 import * as schema from "@/db/schema/index";
 
 export const auth = betterAuth({
   //...
+  user:{
+    deleteUser: {
+      enabled: true,
+    }
+  },
   database: drizzleAdapter(db, {
     provider: "pg", // mysql, sqlite, etc. depending on your database
     schema: {
@@ -26,10 +32,11 @@ export const auth = betterAuth({
       maxAge: 60 * 60 * 24 * 1, // 1 days
     },
   },
-  plugins: [nextCookies()],
+  plugins: [ admin(), nextCookies()],
   advanced: {
     database: {
       generateId: () => uuidv4(),
     },
   },
+  
 });

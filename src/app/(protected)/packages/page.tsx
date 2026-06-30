@@ -9,7 +9,7 @@ import {
   TableHead,
   TableHeader,
 } from "@/components/ui/table";
-import { Calendar, Edit } from "lucide-react";
+import {  Edit } from "lucide-react";
 import Link from "next/link";
 
 const PackagesPage = async () => {
@@ -61,7 +61,7 @@ const PackagesPage = async () => {
                       asChild
                     >
                       <Link href={`/bookings/${pkg.id}`}>
-                        {new Date(date).toLocaleDateString()}
+                        {new Date(date).toLocaleDateString('en-GB')}
                       </Link>
                     </Badge>
                   ))}

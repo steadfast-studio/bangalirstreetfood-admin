@@ -48,6 +48,27 @@ const AdminDashboard = () => {
           </Button>
         </CardFooter>
       </Card>
+
+      {/* Manage Users */}
+      <Card className="cursor-pointer hover:shadow-md transition">
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <CalendarCheck className="h-6 w-6" />
+            <CardTitle>View Users</CardTitle>
+          </div>
+        </CardHeader>
+
+        <CardContent >
+          <p className="text-sm text-muted-foreground">
+            View & manage Admins for your Admin Panel.
+          </p>
+        </CardContent>
+        <CardFooter>
+          <Button variant="success" asChild>
+            <Link href="/users">View Users</Link>
+          </Button>
+        </CardFooter>
+      </Card>
     </div>
   );
 };

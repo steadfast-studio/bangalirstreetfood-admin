@@ -38,7 +38,7 @@ export default function BookingFilters({
   }, [pkg, travelDates]);
 
   return (
-    <form method="GET" className="flex flex-wrap items-end gap-4">
+    <form method="GET" className="flex flex-wrap items-end gap-4 bg-white p-4 rounded-md shadow-sm">
       {/* PACKAGE */}
       <div className="flex flex-col gap-1">
         <Label>Package</Label>

@@ -11,10 +11,7 @@ import {
 } from "@/components/ui/table";
 import { Baby, PhoneCall, UserRound } from "lucide-react";
 import BookingFilters from "../../_components/BookingFilter";
-import {
-  getBookingDetailsById,
-  getTravelDates,
-} from "@/app/_actions/bookings";
+import { getBookingDetailsById, getTravelDates } from "@/app/_actions/bookings";
 import RemovePendingBookings from "@/app/_components/RemovePendingBookings";
 import { BookingDetailsModal } from "@/app/_components/BookingDetailsModal";
 
@@ -30,8 +27,6 @@ const BookingsPage = async ({
   const bookingData = params?.dateId
     ? await getBookingDetailsById(params.dateId)
     : [];
-
-  
 
   return (
     <div className="space-y-6">
@@ -52,11 +47,13 @@ const BookingsPage = async ({
                   packageId={params?.packageId}
                   dateId={params?.dateId}
                   // If it contains any PENDING bookings, then enable the button, else disable it
-                  disabled={!bookingData.some(
-                    (booking) =>
-                      booking.bookingDetails.status.toLowerCase() ===
-                      "pending"
-                  )}
+                  disabled={
+                    !bookingData.some(
+                      (booking) =>
+                        booking.bookingDetails.status.toLowerCase() ===
+                        "pending",
+                    )
+                  }
                 />
               )}
             </div>
@@ -133,19 +130,21 @@ const BookingsPage = async ({
 
                 <TableCell>{booking.paymentDetails.paymentStatus}</TableCell>
 
-                <TableCell>
-                  {booking.paymentDetails.amountPaid}
-                </TableCell>
+                <TableCell>{booking.paymentDetails.amountPaid}</TableCell>
 
                 <TableCell>
-                    <BookingDetailsModal data={booking} />
+                  <BookingDetailsModal data={booking} />
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       ) : (
-        <p>No bookings found.</p>
+        <p className=" bg-white p-4 rounded-md shadow-sm flex items-center justify-center text-muted-foreground">
+          {params?.packageId && params?.dateId
+            ? "No bookings found for the selected package and date."
+            : "Please select a package and date to view bookings."}
+        </p>
       )}
     </div>
   );

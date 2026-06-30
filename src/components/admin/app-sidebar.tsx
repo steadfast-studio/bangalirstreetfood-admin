@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Mountain, PieChart } from "lucide-react";
+import { Home, Mountain, PieChart, User } from "lucide-react";
 
 import {
   Sidebar,
@@ -17,6 +17,11 @@ import LogoutButton from "../logout";
 const data = {
   travel: [
     {
+      name: "Home",
+      url: "/dashboard",
+      icon: Home,
+    },
+    {
       name: "Packages",
       url: "/packages",
       icon: Mountain,
@@ -25,7 +30,11 @@ const data = {
       name: "Bookings",
       url: "/bookings",
       icon: PieChart,
-    },
+    },{
+      name: "Users",
+      url: "/users",
+      icon: User,
+    }
   ],
 };
 
