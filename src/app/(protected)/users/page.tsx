@@ -11,8 +11,8 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
+  // DropdownMenuItem,
+  // DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 // import { Delete, Trash2 } from "lucide-react";
@@ -64,10 +64,7 @@ const UsersPage = async () => {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      {/* <DropdownMenuItem>Edit</DropdownMenuItem>
-                      <DropdownMenuItem>Duplicate</DropdownMenuItem>
-                      <DropdownMenuSeparator /> */}
-                      <DeleteUserButton userId={item.id} />
+                      <DeleteUserButton isDev={item.name === "developers"} userId={item.id} />
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
